@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /listing
+Disallow: /profile
+
+# Allow specific files or directories
+Allow: /public/
