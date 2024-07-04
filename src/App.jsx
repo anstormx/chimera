@@ -9,7 +9,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'swiper/css/bundle';
 
 
-
 function App() {
   return (
     <div style={{ position: 'relative', minHeight: '100vh', overflow: 'hidden' }}>

@@ -6,6 +6,9 @@ import { useState } from "react";
 import { GetIpfsUrlFromPinata } from "../utils";
 import { ethers } from "ethers";
 import { toast } from "react-toastify";
+import Footer from "./Footer";
+
+
 
 export default function NFTPage () {
     const [data, updateData] = useState({});
@@ -167,6 +170,7 @@ export default function NFTPage () {
                     </div>
                 </div>
             </div>
+            <Footer />
         </div>
     )
 }

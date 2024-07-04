@@ -1,4 +1,5 @@
 import Navbar from "./Navbar";
+import Footer from "./Footer";
 import NFTTile from "./NFTcard";
 import marketplace from "../marketplace.json";
 import axios from "axios";
@@ -113,7 +114,8 @@ export default function Marketplace() {
                         )}
                     </div>
                 )}
-            </div>            
+            </div>  
+            <Footer />         
         </div>
     );
 }

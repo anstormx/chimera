@@ -8,6 +8,9 @@ import { ethers } from "ethers";
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import Footer from "./Footer";
+
+
 
 export default function Profile () {
     const [data, updateData] = useState([]);
@@ -115,6 +118,7 @@ export default function Profile () {
                     )}
                 </div>
             </div>
+            <Footer />
         </div>
     )
 };

@@ -4,6 +4,8 @@ import { uploadFileToIPFS, uploadJSONToIPFS } from "../pinata";
 import marketplace from '../marketplace.json';
 import { ethers } from "ethers";
 import { toast } from 'react-toastify';
+import Footer from "./Footer";
+
 
 export default function Listing () {
     const [formParams, updateFormParams] = useState({ name: '', description: '', price: ''});
@@ -157,6 +159,7 @@ export default function Listing () {
                     </button>
                 </form>
             </div>
+            <Footer />
         </div>
     )
 }
