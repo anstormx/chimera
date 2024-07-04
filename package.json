@@ -34,7 +34,10 @@
     "axios": "^0.27.2",
     "crypto-browserify": "^3.12.0",
     "fs": "*",
+<<<<<<< HEAD
     "node-polyfill-webpack-plugin": "^4.0.0",
+=======
+>>>>>>> a3371b1a42ff98301d6a36ed02c131f5ca3c0eca
     "os-browserify": "^0.3.0",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
