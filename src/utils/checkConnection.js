@@ -7,9 +7,12 @@ export const checkConnection = async (getData, setState) => {
             if (accounts.length > 0) {
                 setState(true);
                 getData();
+            } else {
+                setState(false);
             }
         } catch (error) {
-            toast.error("Error checking connection:", error);
+            toast.error("Error checking connection, check console for more details.");
+            console.log(error);
         }
     } 
 };

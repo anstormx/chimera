@@ -1,64 +1,16 @@
 import NFTTile from "./NFTcard";
-import marketplace from "../marketplace.json";
-import axios from "axios";
-import { useState, useEffect, useCallback } from "react";
-import { GetIpfsUrlFromPinata } from "../utils";
-import { ethers } from "ethers";
-import { toast } from 'react-toastify';
+import {useEffect} from "react";
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { useHomeContext } from "../context/homeContent";
+
 
 
 export default function Marketplace() {
-    const [data, updateData] = useState([]);
-    const [dataFetched, updateFetched] = useState(false);
-    const [loading, setLoading] = useState(false);
-
-
-    const getAllNFTs = useCallback(async () => {
-        setLoading(true);
-        try {
-            const providerInfura = new ethers.providers.InfuraProvider(
-                "sepolia",
-                process.env.INFURA_PROJECT_ID
-            );
-            const contract = new ethers.Contract(marketplace.address, marketplace.abi, providerInfura);
-            const listedNFT = await contract.getMarketTokens();
-            const items = await Promise.all(listedNFT.map(async nft => {
-                try {
-                    var tokenURI = await contract.tokenURI(nft.tokenID);
-                    tokenURI = GetIpfsUrlFromPinata(tokenURI);
-                    let meta = await axios.get(tokenURI);
-                    meta = meta.data;
-
-                    const price = ethers.utils.formatUnits(nft.price.toString(), 'ether');
-                    let item = {
-                        price: price,
-                        tokenID: nft.tokenID.toNumber(),
-                        seller: nft.seller,
-                        owner: nft.owner,
-                        image: meta.image,
-                        name: meta.name,
-                        description: meta.description,
-                    }
-                    return item;
-                } catch (error) {
-                    toast.error("Error fetching token metadata:", error);
-                    return null;
-                }
-            }));
-            updateData(items.filter(item => item !== null));
-            updateFetched(true);
-        } catch (error) {
-            toast.error("Error fetching NFTs. Check console for more details.");
-            console.log(error);
-        } finally {
-            setLoading(false);
-        }         
-    }, []);
+    const { data, dataFetched, loading, getAllNFTs } = useHomeContext();
 
     useEffect(() => {
         if (!dataFetched) {

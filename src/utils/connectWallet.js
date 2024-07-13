@@ -1,11 +1,13 @@
 import { toast } from 'react-toastify';
 
-export const connectWebsite = async (setLoading, updateButton, toggleConnect, location) => {
+export const connectWebsite = async (setLoading, toggleConnect) => {
   try {
     setLoading(true);
     
     if (typeof window.ethereum === 'undefined') {
-      throw new Error('MetaMask is not installed.');
+      toast.error('MetaMask is not installed. Please install MetaMask to connect');
+      setLoading(false);
+      return;
     }
     
     const chainId = await window.ethereum.request({ method: 'eth_chainId' });
@@ -19,13 +21,13 @@ export const connectWebsite = async (setLoading, updateButton, toggleConnect, lo
 
     await window.ethereum.request({ method: 'eth_requestAccounts' })
       .then(() => {
-        updateButton();
         toggleConnect(true);
-        window.location.replace(location.pathname);
       });
 
   } catch (err) {
     handleConnectError(err, setLoading);
+  } finally {
+    setLoading(false);
   }
 };
 

@@ -11,7 +11,6 @@ import { checkConnection } from '../utils/checkConnection';
 
 export default function Profile () {
     const [data, updateData] = useState([]);
-    const [dataFetched, updateFetched] = useState(false);
     const [address, updateAddress] = useState("0x");
     const [loading, setLoading] = useState(false);
     const [connected, setConnection] = useState(false);
@@ -53,7 +52,6 @@ export default function Profile () {
                     }
                 }))
                 updateData(items.filter(item => item !== null));
-                updateFetched(true);
                 updateAddress(addr);
             } catch(err) {
                 if (err.code === 4001) {
@@ -71,10 +69,17 @@ export default function Profile () {
     }, []);
 
     useEffect(() => {
-        if (!dataFetched) {
+        checkConnection(getNFTData, setConnection);
+
+        const handleAccountsChanged = () => {
             checkConnection(getNFTData, setConnection);
+        };
+
+        if (window.ethereum) {
+            window.ethereum.on('accountsChanged', handleAccountsChanged);
         }
-    }, [dataFetched, getNFTData]);
+
+    }, [getNFTData]);
 
     return (
         <div className="min-h-screen flex flex-col">
