@@ -19,6 +19,7 @@ export default function Marketplace() {
     const [dataFetched, updateFetched] = useState(false);
     const [loading, setLoading] = useState(false);
 
+
     const getAllNFTs = useCallback(async () => {
         setLoading(true);
         try {
@@ -26,6 +27,9 @@ export default function Marketplace() {
                 "sepolia",
                 process.env.INFURA_PROJECT_ID
             );
+            // const provider = new ethers.providers.Web3Provider(window.ethereum);
+            // await window.ethereum.request({ method: 'eth_requestAccounts' });
+            // const signer = provider.getSigner();
             const contract = new ethers.Contract(marketplace.address, marketplace.abi, providerInfura);
             const listedNFT = await contract.getMarketTokens();
             const items = await Promise.all(listedNFT.map(async nft => {
@@ -53,12 +57,12 @@ export default function Marketplace() {
             }));
             updateData(items.filter(item => item !== null));
             updateFetched(true);
-            setLoading(false);
         } catch (error) {
             toast.error("Error fetching NFTs. Check console for more details.");
             console.log(error);
+        } finally {
             setLoading(false);
-        }     
+        }         
     }, []);
 
     useEffect(() => {
