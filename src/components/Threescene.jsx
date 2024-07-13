@@ -127,7 +127,12 @@ const ThreeScene = () => {
   };
   }, []);
 
-  return <div ref={mountRef} style={{ position: 'absolute', width: '100%', height: '100%', zIndex: -1 }} />;
+  return <div ref={mountRef} style={{ 
+    position: 'fixed',
+    width: '100%',
+    height: '100%',
+    zIndex: -1
+  }} />;
 };
 
 export default ThreeScene;

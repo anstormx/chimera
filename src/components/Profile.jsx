@@ -1,4 +1,3 @@
-import Navbar from "./Navbar";
 import marketplace from "../marketplace.json";
 import axios from "axios";
 import { GetIpfsUrlFromPinata } from "../utils";
@@ -8,21 +7,17 @@ import { ethers } from "ethers";
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import Footer from "./Footer";
-
-
+import { checkConnection } from '../utils/checkConnection';
 
 export default function Profile () {
     const [data, updateData] = useState([]);
     const [dataFetched, updateFetched] = useState(false);
     const [address, updateAddress] = useState("0x");
-    const [totalPrice, updateTotalPrice] = useState("0");
     const [loading, setLoading] = useState(false);
-
+    const [connected, setConnection] = useState(false);
 
     const getNFTData = useCallback(async () => {
         setLoading(true);
-        let sumPrice = 0;
         if (typeof window.ethereum === 'undefined') {
             return;
         } else {
@@ -51,7 +46,6 @@ export default function Profile () {
                             name: meta.name,
                             description: meta.description,
                         }
-                        sumPrice += Number(price);
                         return item;
                     } catch (error) {
                         toast.error("Error fetching token metadata:", error);
@@ -61,7 +55,6 @@ export default function Profile () {
                 updateData(items.filter(item => item !== null));
                 updateFetched(true);
                 updateAddress(addr);
-                updateTotalPrice(sumPrice.toFixed(3));
             } catch(err) {
                 if (err.code === 4001) {
                     toast.error('Please connect your Metamask wallet.');
@@ -79,46 +72,48 @@ export default function Profile () {
 
     useEffect(() => {
         if (!dataFetched) {
-            getNFTData();
+            checkConnection(getNFTData, setConnection);
         }
     }, [dataFetched, getNFTData]);
 
     return (
-        <div className="profileClass min-h-screen flex flex-col">
-            <Navbar />
-            <div className="flex text-center flex-col mt-20 text-white">
-                <div className="mb-5">
-                    <h2 className="font-bold text-lg">Wallet Address: {address}</h2>  
-                </div>
-            </div>
-            <div className="flex flex-row text-center justify-center md:text-2xl text-white" style={{fontSize: '1.2rem'}}>
+        <div className="min-h-screen flex flex-col">
+            <div className="flex-grow px-4 py-8">
+                {connected ? 
                     <div>
-                        <h2 className="font-bold">Total NFTs: {data.length}</h2>
-                    </div>
-                    <div className="ml-20">
-                        <h2 className="font-bold">Total Value: {totalPrice} ETH</h2>
-                    </div>
-            </div>
-            <div className="flex flex-col text-center items-center mt-5 text-white">
-                <h2 className="font-bold text-2xl">Your NFTs</h2>
-                <div className="flex justify-center flex-wrap max-w-screen-2xl overflow-auto">
-                    {data.map((value, index) => {
-                        return <NFTTile data={value} key={index} />;
-                    })}
-                </div>
-                <div className="mt-10 text-xl">
-                    {loading ? (
-                        <div className="text-white mt-10 text-xl">
-                            <FontAwesomeIcon icon={faSpinner} spin className="mt-10" size="3x" />
+                        <div className="text-center mb-8 text-white font-bold text-lg">
+                            <h2>Wallet Address: {address}</h2>  
                         </div>
-                    ) : (
-                        <div>
-                            {data.length === 0 ? "No NFT data to display":""}
+                        <div className="text-center text-white">
+                            <h2 className="font-bold text-2xl mb-5">Your NFTs</h2>
+                            <div>
+                                {loading ? (
+                                    <div className="mt-14">
+                                        <FontAwesomeIcon icon={faSpinner} spin size="4x" />
+                                    </div>
+                                ) : (
+                                    <div>
+                                        {data.length === 0 ? "No NFT data to display"
+                                        :
+                                        <div className="flex justify-center overflow-y-auto">
+                                            <div className="flex flex-wrap justify-start max-w-screen-2xl w-full px-4">
+                                                {data.map((value, index) => {
+                                                    return <NFTTile data={value} key={index} />;
+                                                })}
+                                            </div>
+                                        </div>
+                                        }
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                    )}
-                </div>
+                    </div>
+                    :
+                    <div className="text-center text-white font-bold text-2xl mt-10">
+                        <h2>Please connect your wallet to view your NFTs</h2>
+                    </div>
+                }
             </div>
-            <Footer />
         </div>
-    )
-};
+    );
+}

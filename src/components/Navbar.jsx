@@ -2,9 +2,10 @@ import { Link } from "react-router-dom";
 import { useEffect, useState, useCallback } from 'react';
 import { useLocation } from 'react-router';
 import logo from '../assets/logo.png';
-import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { checkConnection } from '../utils/checkConnection';
+import { connectWebsite } from '../utils/connectWallet';
 
 
 function Navbar() {
@@ -23,100 +24,13 @@ function Navbar() {
     }
   }, []);
 
-  const checkConnection = useCallback(async () => {
-    if (window.ethereum) {
-      const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-      if (accounts.length > 0) {
-        toggleConnect(true);
-        updateButton();
-      }
-    }
-  }, [updateButton]);
-
-  async function connectWebsite() {
-    setLoading(true);
-    
-    // Check if Metamask is installed
-    if (typeof window.ethereum === 'undefined') {
-      toast.error('Metamask not installed! Please install Metamask to continue');
-      setLoading(false);
-      return;
-    }
-    
-    // Check if Metamask network is Sepolia
-    const chainId = await window.ethereum.request({ method: 'eth_chainId' });
-    if(chainId !== '0xaa36a7') {
-      try {
-        toast.warn('Incorrect network! Switch your metamask network to Sepolia');
-        await window.ethereum.request({
-          method: 'wallet_switchEthereumChain',
-          params: [{ chainId: '0xaa36a7' }],
-        });
-      } catch (error) {
-        if (error.code === 4001) {
-          toast.error('Please connect to MetaMask.');  
-          setLoading(false);  
-          return;     
-        }
-        else {
-          toast.error('Failed to switch network. Please switch manually.'); 
-          setLoading(false);
-          return;    
-        }
-      }
-    } 
-
-    try {
-      // Request user accounts
-      await window.ethereum.request({ method: 'eth_requestAccounts' })
-        .then(() => {
-          updateButton();
-          toggleConnect(true); // Update the connected state
-          window.location.replace(location.pathname);
-        });
-    } catch (err) {
-      if (err.code === -32002) {
-        toast.warn('Already processing request to connect accounts. Please confirm the request in your Metamask extension.');
-        setLoading(false);
-        return;
-      } 
-      else if (err.code === 4902) {
-        try {
-          await window.ethereum.request({
-            method: 'wallet_addEthereumChain',
-            params: [
-              {
-                chainId: '0xaa36a7',
-                chainName: 'Sepolia Test Network',
-                nativeCurrency: {
-                  name: 'Ethereum',
-                  symbol: 'ETH',
-                  decimals: 18,
-                },
-                rpcUrls: ['https://rpc.sepolia.org/'],
-                blockExplorerUrls: ['https://sepolia.etherscan.io'],
-              },
-            ],
-          });
-        } catch (error) {
-          toast.error('Failed to add Sepolia network to Metamask. Please add manually.');
-          setLoading(false);
-          return;
-        }
-      } else if (err.code === 4001) {
-        toast.error('Please connect your Metamask wallet.'); // User rejected the connection request
-        setLoading(false); 
-        return;      
-      } else {
-        toast.error('An error occurred while connecting to MetaMask. Please try again.');
-        setLoading(false); 
-        return;      
-      }
-    } 
-  }
+  const handleConnectWebsite = () => {
+    connectWebsite(setLoading, updateButton, toggleConnect, location);
+  };
 
   useEffect(() => {
-    checkConnection();
+    checkConnection(updateButton, toggleConnect);
+
     const handleAccountsChanged = () => {
       window.location.reload();
     };
@@ -130,7 +44,7 @@ function Navbar() {
         window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
       }
     };
-  }, [checkConnection]);
+  }, [updateButton]);
 
   return (
     <div>
@@ -174,10 +88,10 @@ function Navbar() {
               <li>
                 <button 
                   className="enableEthereumButton bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded-3xl text-lg" 
-                  onClick={connectWebsite} 
-                  disabled={loading}
+                  onClick={handleConnectWebsite} 
+                  disabled={loading || connected}
                 >
-                  {loading ? <div><FontAwesomeIcon icon={faSpinner} spin className="mr-3" /> Loading</div>: (connected ? "Connected" : "Connect Wallet")}
+                  {loading ? <div><FontAwesomeIcon icon={faSpinner} spin className="mr-3" /> Loading</div>: (connected ? "Connected" : "Connect")}
                 </button>              
               </li>
             </ul>

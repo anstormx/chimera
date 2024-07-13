@@ -7,26 +7,31 @@ import ThreeScene from './components/Threescene';
 import { ToastContainer, Flip } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'swiper/css/bundle';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 
 
 function App() {
   return (
-    <div style={{ position: 'relative', minHeight: '100vh', overflow: 'hidden' }}>
+    <div className="relative min-h-screen">
       <ThreeScene />
-      <Router>
-        <Routes>
-          <Route path="/" element={<Marketplace />}/>
-          <Route path="/nftpage/:tokenID" element={<NFTPage />}/>        
-          <Route path="/profile" element={<Profile />}/>
-          <Route path="/listing" element={<Listing />}/>             
-        </Routes>
-      </Router>
+      <div className="overflow-x-hidden overflow-y-hidden">
+        <Router>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Marketplace />}/>
+            <Route path="/nftpage/:tokenID" element={<NFTPage />}/>        
+            <Route path="/profile" element={<Profile />}/>
+            <Route path="/listing" element={<Listing />}/>             
+          </Routes>
+          <Footer />
+        </Router>
+      </div>
       <ToastContainer
         position="bottom-right"
         autoClose={3000}
         newestOnTop={false}
         hideProgressBar={true}
-        rtl={false}
         pauseOnFocusLoss
         pauseOnHover
         theme="dark"

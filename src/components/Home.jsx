@@ -1,5 +1,3 @@
-import Navbar from "./Navbar";
-import Footer from "./Footer";
 import NFTTile from "./NFTcard";
 import marketplace from "../marketplace.json";
 import axios from "axios";
@@ -27,9 +25,6 @@ export default function Marketplace() {
                 "sepolia",
                 process.env.INFURA_PROJECT_ID
             );
-            // const provider = new ethers.providers.Web3Provider(window.ethereum);
-            // await window.ethereum.request({ method: 'eth_requestAccounts' });
-            // const signer = provider.getSigner();
             const contract = new ethers.Contract(marketplace.address, marketplace.abi, providerInfura);
             const listedNFT = await contract.getMarketTokens();
             const items = await Promise.all(listedNFT.map(async nft => {
@@ -72,43 +67,39 @@ export default function Marketplace() {
     }, [dataFetched, getAllNFTs]);
 
     return (
-        <div style={{minHeight: "100vh"}}>
-            <Navbar />
-            <div className="flex flex-col place-items-center mt-20">
-                <div className="text-3xl font-bold text-white">
-                    Listed NFTs
+        <div className="flex flex-col place-items-center mt-20 min-h-screen">
+            <div className="text-3xl font-bold text-white">
+                Listed NFTs
+            </div>
+            {loading ? (
+                <div className="text-white mt-10 text-xl">
+                    <FontAwesomeIcon icon={faSpinner} spin className="mt-10" size="3x" />
                 </div>
-                {loading ? (
-                    <div className="text-white mt-10 text-xl">
-                        <FontAwesomeIcon icon={faSpinner} spin className="mt-10" size="3x" />
-                    </div>
-                ) : (
-                    <div>
-                        {data.length > 0 ? (
-                            <div className="flex mt-5 justify-between flex-wrap max-w-screen-xl text-center">
-                                <Swiper
-                                    modules={[Navigation, Pagination, Scrollbar, A11y]}
-                                    spaceBetween={50}
-                                    slidesPerView={3}
-                                    navigation
-                                    speed={1000}
-                                    pagination={{ clickable: true }}
-                                    scrollbar={{ draggable: true }}   
-                                >
-                                {data.map((item, index) => (
-                                    <SwiperSlide>
-                                        <NFTTile data={item} key={index} />                             
-                                    </SwiperSlide>
-                                ))}
-                                </Swiper>
-                            </div>
-                        ) : (
-                            <div className="mt-10 text-white" style={{fontSize:'1.2rem'}}>No NFTs listed</div>
-                        )}
-                    </div>
-                )}
-            </div>  
-            <Footer />         
-        </div>
+            ) : (
+                <div>
+                    {data.length > 0 ? (
+                        <div className="flex mt-5 justify-between flex-wrap max-w-screen-xl text-center">
+                            <Swiper
+                                modules={[Navigation, Pagination, Scrollbar, A11y]}
+                                spaceBetween={50}
+                                slidesPerView={3}
+                                navigation
+                                speed={1000}
+                                pagination={{ clickable: true }}
+                                scrollbar={{ draggable: true }}   
+                            >
+                            {data.map((item, index) => (
+                                <SwiperSlide>
+                                    <NFTTile data={item} key={index} />                             
+                                </SwiperSlide>
+                            ))}
+                            </Swiper>
+                        </div>
+                    ) : (
+                        <div className="mt-10 text-white" style={{fontSize:'1.2rem'}}>No NFTs listed</div>
+                    )}
+                </div>
+            )}
+        </div>  
     );
 }
