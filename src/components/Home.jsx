@@ -19,57 +19,46 @@ export default function Marketplace() {
     const [dataFetched, updateFetched] = useState(false);
     const [loading, setLoading] = useState(false);
 
-
     const getAllNFTs = useCallback(async () => {
         setLoading(true);
-        if (typeof window.ethereum === 'undefined') {
-            return;
-        }
-        else {
-            try {
-                const provider = new ethers.providers.Web3Provider(window.ethereum);
-                await window.ethereum.request({ method: 'eth_requestAccounts' });
-                const signer = provider.getSigner();
-                const contract = new ethers.Contract(marketplace.address, marketplace.abi, signer);
-                const listedNFT = await contract.getMarketTokens();
-                const items = await Promise.all(listedNFT.map(async nft => {
-                    try {
-                        var tokenURI = await contract.tokenURI(nft.tokenID);
-                        tokenURI = GetIpfsUrlFromPinata(tokenURI);
-                        let meta = await axios.get(tokenURI);
-                        meta = meta.data;
+        try {
+            const providerInfura = new ethers.providers.InfuraProvider(
+                "sepolia",
+                process.env.INFURA_PROJECT_ID
+            );
+            const contract = new ethers.Contract(marketplace.address, marketplace.abi, providerInfura);
+            const listedNFT = await contract.getMarketTokens();
+            const items = await Promise.all(listedNFT.map(async nft => {
+                try {
+                    var tokenURI = await contract.tokenURI(nft.tokenID);
+                    tokenURI = GetIpfsUrlFromPinata(tokenURI);
+                    let meta = await axios.get(tokenURI);
+                    meta = meta.data;
 
-                        const price = ethers.utils.formatUnits(nft.price.toString(), 'ether');
-                        let item = {
-                            price: price,
-                            tokenID: nft.tokenID.toNumber(),
-                            seller: nft.seller,
-                            owner: nft.owner,
-                            image: meta.image,
-                            name: meta.name,
-                            description: meta.description,
-                        }
-                        return item;
-                    } catch (error) {
-                        toast.error("Error fetching token metadata:", error);
-                        return null;
+                    const price = ethers.utils.formatUnits(nft.price.toString(), 'ether');
+                    let item = {
+                        price: price,
+                        tokenID: nft.tokenID.toNumber(),
+                        seller: nft.seller,
+                        owner: nft.owner,
+                        image: meta.image,
+                        name: meta.name,
+                        description: meta.description,
                     }
-                }));
-                updateData(items.filter(item => item !== null));
-                updateFetched(true);
-            } catch (error) {
-                if (error.code === 4001) {
-                    toast.error('Please connect your Metamask wallet.');
-                } else if (error.code === -32002) {
-                    toast.warn("Already processing request to connect accounts. Please confirm the request in your Metamask extension.");
-                } else {
-                    toast.error("Error fetching NFTs. Check console for more details.");
-                    console.log(error);
+                    return item;
+                } catch (error) {
+                    toast.error("Error fetching token metadata:", error);
+                    return null;
                 }
-            } finally {
-                setLoading(false);
-            }          
-        }
+            }));
+            updateData(items.filter(item => item !== null));
+            updateFetched(true);
+            setLoading(false);
+        } catch (error) {
+            toast.error("Error fetching NFTs. Check console for more details.");
+            console.log(error);
+            setLoading(false);
+        }     
     }, []);
 
     useEffect(() => {
