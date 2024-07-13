@@ -132,7 +132,7 @@ export default function Listing () {
     return (
         <div className="flex flex-col place-items-center mt-10 min-h-screen" id="nftForm">
             <form className="bg-transparent text-white">
-                <h3 className="text-center font-bold mb-10 text-3xl">Upload NFT to CHIMERA</h3>
+                <h3 className="text-center font-bold mb-10 text-3xl">Upload Your NFT</h3>
                 <div className="mb-4">
                     <label className="block text-lg mb-2 font-semibold" htmlFor="name">NFT Name</label>
                     <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" type="text" onChange={e => updateFormParams({...formParams, name: e.target.value})} value={formParams.name}></input>
@@ -150,7 +150,7 @@ export default function Listing () {
                     <input type={"file"} onChange={OnChangeFile}></input>
                 </div>
                 <div className="text-red-500 text-center">{message}</div>
-                <button onClick={listNFT} className="font-bold mt-10 w-full bg-purple-500 text-white rounded p-2 shadow-lg" id="list-button">
+                <button onClick={listNFT} className="font-bold mt-10 w-full bg-purple-700 text-white rounded p-2 shadow-lg" id="list-button">
                     List NFT
                 </button>
             </form>

@@ -1,10 +1,10 @@
 import React, { useRef, useEffect } from 'react';
 import * as Three from 'three';
 import space from '../assets/bg.jpg';
-import mercury from '../assets/mercury.png';
-import eris from '../assets/eris_fictional.jpg';
-import haumea from '../assets/haumea_fictional.jpg';
-import ceres from '../assets/ceres_fictional.jpg';
+import mercury from '../assets/mercury.webp';
+import eris from '../assets/eris_fictional.webp';
+import haumea from '../assets/haumea_fictional.webp';
+import ceres from '../assets/ceres_fictional.webp';
 
 
 const ThreeScene = () => {
