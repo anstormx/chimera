@@ -2,7 +2,7 @@ import marketplace from "../marketplace.json";
 import axios from "axios";
 import { GetIpfsUrlFromPinata } from "../utils";
 import { useState, useEffect, useCallback } from "react";
-import NFTTile from "./NFTcard";
+import NFTTile from "./components/NFTcard";
 import { ethers } from "ethers";
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -17,54 +17,50 @@ export default function Profile () {
 
     const getNFTData = useCallback(async () => {
         setLoading(true);
-        if (typeof window.ethereum === 'undefined') {
-            return;
-        } else {
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            try {
-                await window.ethereum.request({ method: 'eth_requestAccounts' });
-                const signer = provider.getSigner();
-                const addr = await signer.getAddress();
-                let contract = new ethers.Contract(marketplace.address, marketplace.abi, signer)
-                let mynft = await contract.getMyNFTs()
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        try {
+            await window.ethereum.request({ method: 'eth_requestAccounts' });
+            const signer = provider.getSigner();
+            const addr = await signer.getAddress();
+            let contract = new ethers.Contract(marketplace.address, marketplace.abi, signer)
+            let mynft = await contract.getMyNFTs()
 
-                const items = await Promise.all(mynft.map(async nft => {
-                    try {
-                        var tokenURI = await contract.tokenURI(nft.tokenID);
-                        tokenURI = GetIpfsUrlFromPinata(tokenURI);
-                        let meta = await axios.get(tokenURI);
-                        meta = meta.data;
+            const items = await Promise.all(mynft.map(async nft => {
+                try {
+                    var tokenURI = await contract.tokenURI(nft.tokenID);
+                    tokenURI = GetIpfsUrlFromPinata(tokenURI);
+                    let meta = await axios.get(tokenURI);
+                    meta = meta.data;
 
-                        let price = ethers.utils.formatUnits(nft.price.toString(), 'ether');
-                        let item = {
-                            price: price,
-                            tokenId: nft.tokenID.toNumber(),
-                            seller: nft.seller,
-                            owner: nft.owner,
-                            image: meta.image,
-                            name: meta.name,
-                            description: meta.description,
-                        }
-                        return item;
-                    } catch (error) {
-                        toast.error("Error fetching token metadata:", error);
-                        return null;
+                    let price = ethers.utils.formatUnits(nft.price.toString(), 'ether');
+                    let item = {
+                        price: price,
+                        tokenId: nft.tokenID.toNumber(),
+                        seller: nft.seller,
+                        owner: nft.owner,
+                        image: meta.image,
+                        name: meta.name,
+                        description: meta.description,
                     }
-                }))
-                updateData(items.filter(item => item !== null));
-                updateAddress(addr);
-            } catch(err) {
-                if (err.code === 4001) {
-                    toast.error('Please connect your Metamask wallet.');
-                } else if (err.code === -32002) {
-                    toast.warn("Already processing request to connect accounts. Please confirm the request in your Metamask extension.");
-                } else {
-                    toast.error("Error loading Profile data.");
-                    console.log(err);
+                    return item;
+                } catch (error) {
+                    toast.error("Error fetching token metadata:", error);
+                    return null;
                 }
-            } finally {
-                setLoading(false);
+            }))
+            updateData(items.filter(item => item !== null));
+            updateAddress(addr);
+        } catch(err) {
+            if (err.code === 4001) {
+                toast.error('Please connect your Metamask wallet.');
+            } else if (err.code === -32002) {
+                toast.warn("Already processing request to connect accounts. Please confirm the request in your Metamask extension.");
+            } else {
+                toast.error("Error loading Profile data.");
+                console.log(err);
             }
+        } finally {
+            setLoading(false);
         }
     }, []);
 

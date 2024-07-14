@@ -1,4 +1,4 @@
-import NFTTile from "./NFTcard";
+import NFTTile from "./components/NFTcard";
 import {useEffect} from "react";
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -6,17 +6,21 @@ import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { useHomeContext } from "../context/homeContent";
-
+import { debounce } from "lodash";
 
 
 export default function Marketplace() {
     const { data, dataFetched, loading, getAllNFTs } = useHomeContext();
+    const [delay, setDelay] = React.useState(0);
+
+    const debounceGetAllNFTs = debounce(getAllNFTs, delay);
 
     useEffect(() => {
         if (!dataFetched) {
-            getAllNFTs();
+            debounceGetAllNFTs();
+            setDelay(10000);
         }
-    }, [dataFetched, getAllNFTs]);
+    }, [dataFetched, debounceGetAllNFTs]);
 
     return (
         <div className="flex flex-col place-items-center mt-20 min-h-screen">
@@ -41,7 +45,7 @@ export default function Marketplace() {
                                 scrollbar={{ draggable: true }}   
                             >
                             {data.map((item, index) => (
-                                <SwiperSlide>
+                                <SwiperSlide key={index}>
                                     <NFTTile data={item} key={index} />                             
                                 </SwiperSlide>
                             ))}

@@ -1,14 +1,14 @@
-import Home from './components/Home';
-import Profile from './components/Profile';
-import Listing from './components/Listing';
-import NFTPage from './components/NFTpage';
+import Home from './pages/Home';
+import Profile from './pages/Profile';
+import Listing from './pages/Listing';
+import NFTPage from './pages/NFTpage';
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
-import ThreeScene from './components/Threescene';
+import ThreeScene from './pages/components/Threescene';
 import { ToastContainer, Flip } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'swiper/css/bundle';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
+import Navbar from './pages/components/Navbar';
+import Footer from './pages/components/Footer';
 import { HomeProvider } from './context/homeContent';
 
 

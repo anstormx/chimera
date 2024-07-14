@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 import { useCallback, useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
-import logo from '../assets/logo.png';
+import logo from '../../assets/logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { checkConnection } from '../utils/checkConnection';
-import { connectWebsite } from '../utils/connectWallet';
+import { checkConnection } from '../../utils/checkConnection';
+import { connectWebsite } from '../../utils/connectWallet';
 
 
 function Navbar() {
