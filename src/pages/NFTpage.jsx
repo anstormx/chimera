@@ -27,7 +27,11 @@ export default function NFTPage () {
                 const accounts = await window.ethereum.request({ method: 'eth_accounts' });
                 if (accounts.length > 0) {
                     provider = new ethers.providers.Web3Provider(window.ethereum);
-                } 
+                    const signer = provider.getSigner();
+                    updateCurrAddress(await signer.getAddress());
+                } else {
+                    toast.info("Please connect with MetaMask to interact with the NFT");
+                }
             }
             let contract = new ethers.Contract(marketplace.address, marketplace.abi, provider)
             var tokenURI = await contract.tokenURI(tokenID);
@@ -46,7 +50,6 @@ export default function NFTPage () {
             }
             updateData(item);
             updateDataFetched(true);
-            getAddress();
         } catch(err) {
             toast.error("Error fetching NFT data. Please check console for more details");
             console.log(err);
@@ -115,22 +118,6 @@ export default function NFTPage () {
             console.log(e);
         }
     };
-
-    const getAddress = async () => {
-        if(window.ethereum) {
-            try {
-                const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-                if (accounts.length > 0) {
-                    updateCurrAddress(ethers.utils.getAddress(accounts[0]));
-                } else {
-                    toast.info("Please connect with MetaMask to interact with the NFT");
-                }
-            } catch (error) {
-                toast.error("Error checking connection, check console for more details");
-                console.log(error);
-            }
-        }
-    }
 
     useEffect(() => {
         if(!dataFetched)
