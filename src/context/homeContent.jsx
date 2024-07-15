@@ -28,31 +28,21 @@ export const HomeProvider = ({ children }) => {
                 setLoading(false);
                 return;
             }
-            let provider;
+            let provider = new ethers.providers.InfuraProvider(
+                "sepolia",
+                process.env.INFURA_PROJECT_ID
+            );
 
             if (window.ethereum) {
                 const chainId = await window.ethereum.request({ method: 'eth_chainId' });
                 if(chainId !== '0xaa36a7') {
                     toast.warn("You're viewing data from the Sepolia network, but your wallet is connected to mainnet");
                 }
-                try {
-                    const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-                    if (accounts.length > 0) {
-                        provider = new ethers.providers.Web3Provider(window.ethereum);
-                    } else {
-                        provider = new ethers.providers.InfuraProvider(
-                            "sepolia",
-                            process.env.INFURA_PROJECT_ID
-                        );
-                    }
-                } catch (error) {
-                    provider = new ethers.providers.InfuraProvider(
-                        "sepolia",
-                        process.env.INFURA_PROJECT_ID
-                    );
+                const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+                if (accounts.length > 0) {
+                    provider = new ethers.providers.Web3Provider(window.ethereum);
                 }
             }
-            
             const contract = new ethers.Contract(marketplace.address, marketplace.abi, provider);
             const listedNFT = await contract.getMarketTokens();
             const items = await Promise.all(listedNFT.map(async nft => {
