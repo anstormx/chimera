@@ -2,8 +2,9 @@ import { createContext, useContext, useState } from "react";
 import { ethers } from "ethers";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { GetIpfsUrlFromPinata } from "../utils";
+import { GetIpfsUrlFromPinata } from "../utils/url";
 import marketplace from "../marketplace.json";
+// import { prisma } from "../utils/db";
 
 const homeContext = createContext(undefined);
 
@@ -27,11 +28,28 @@ export const HomeProvider = ({ children }) => {
                 setLoading(false);
                 return;
             }
-            const providerInfura = new ethers.providers.InfuraProvider(
-                "sepolia",
-                process.env.INFURA_PROJECT_ID
-            );
-            const contract = new ethers.Contract(marketplace.address, marketplace.abi, providerInfura);
+            let provider;
+
+            if (window.ethereum) {
+                try {
+                    const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+                    if (accounts.length > 0) {
+                        provider = new ethers.providers.Web3Provider(window.ethereum);
+                    } else {
+                        provider = new ethers.providers.InfuraProvider(
+                            "sepolia",
+                            process.env.INFURA_PROJECT_ID
+                        );
+                    }
+                } catch (error) {
+                    provider = new ethers.providers.InfuraProvider(
+                        "sepolia",
+                        process.env.INFURA_PROJECT_ID
+                    );
+                }
+            }
+            
+            const contract = new ethers.Contract(marketplace.address, marketplace.abi, provider);
             const listedNFT = await contract.getMarketTokens();
             const items = await Promise.all(listedNFT.map(async nft => {
                 let tokenURI = await contract.tokenURI(nft.tokenID);
@@ -50,7 +68,19 @@ export const HomeProvider = ({ children }) => {
                 };
                 return item;
             }));
-            setData(items.filter(item => item !== null));
+            
+            const finalItems = items.filter(item => item !== null);
+
+            // const response = await prisma.wallet.create({
+            //     data: {
+            //       salt: salt,
+            //       signers: signers.map((s) => s.toLowerCase()), // Convert all signer addresses to lowercase for consistency
+            //       isDeployed: false,
+            //       address: walletAddress,
+            //     },
+            // });
+
+            setData(finalItems);
             setDataFetched(true);
 
             localStorage.setItem('nftData', JSON.stringify(items));

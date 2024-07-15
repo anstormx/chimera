@@ -1,6 +1,6 @@
 import marketplace from "../marketplace.json";
 import axios from "axios";
-import { GetIpfsUrlFromPinata } from "../utils";
+import { GetIpfsUrlFromPinata } from "../utils/url";
 import { useState, useEffect, useCallback } from "react";
 import NFTTile from "./components/NFTcard";
 import { ethers } from "ethers";
@@ -11,7 +11,6 @@ import { checkConnection } from '../utils/checkConnection';
 
 export default function Profile () {
     const [data, updateData] = useState([]);
-    const [address, updateAddress] = useState("0x");
     const [loading, setLoading] = useState(false);
     const [connected, setConnection] = useState(false);
 
@@ -21,7 +20,6 @@ export default function Profile () {
         try {
             await window.ethereum.request({ method: 'eth_requestAccounts' });
             const signer = provider.getSigner();
-            const addr = await signer.getAddress();
             let contract = new ethers.Contract(marketplace.address, marketplace.abi, signer)
             let mynft = await contract.getMyNFTs()
 
@@ -49,7 +47,6 @@ export default function Profile () {
                 }
             }))
             updateData(items.filter(item => item !== null));
-            updateAddress(addr);
         } catch(err) {
             if (err.code === 4001) {
                 toast.error('Please connect your Metamask wallet.');
@@ -78,43 +75,38 @@ export default function Profile () {
     }, [getNFTData]);
 
     return (
-        <div className="min-h-screen flex flex-col">
-            <div className="flex-grow px-4 py-8">
-                {connected ? 
-                    <div>
-                        <div className="text-center mb-8 text-white font-bold text-lg">
-                            <h2>Wallet Address: {address}</h2>  
-                        </div>
-                        <div className="text-center text-white">
-                            <h2 className="font-bold text-2xl mb-5">Your NFTs</h2>
-                            <div>
-                                {loading ? (
-                                    <div className="mt-14">
-                                        <FontAwesomeIcon icon={faSpinner} spin size="4x" />
-                                    </div>
-                                ) : (
-                                    <div>
-                                        {data.length === 0 ? "No NFT data to display"
-                                        :
-                                        <div className="flex justify-center overflow-y-auto">
-                                            <div className="flex flex-wrap justify-start max-w-screen-2xl w-full px-4">
-                                                {data.map((value, index) => {
-                                                    return <NFTTile data={value} key={index} />;
-                                                })}
-                                            </div>
+        <div className="min-h-screen flex flex-col flex-grow px-32 py-6">
+            {connected ? 
+                <div>
+                    <div className="text-center text-white">
+                        <h2 className="font-bold text-3xl mb-4">Your NFTs</h2>
+                        <div>
+                            {loading ? (
+                                <div className="mt-14">
+                                    <FontAwesomeIcon icon={faSpinner} spin size="3x" />
+                                </div>
+                            ) : (
+                                <div>
+                                    {data.length === 0 ? "No NFT data to display"
+                                    :
+                                    <div className="flex justify-center overflow-y-auto">
+                                        <div className="flex flex-wrap justify-start max-w-screen-2xl w-full px-4">
+                                            {data.map((value, index) => {
+                                                return <NFTTile data={value} key={index} />;
+                                            })}
                                         </div>
-                                        }
                                     </div>
-                                )}
-                            </div>
+                                    }
+                                </div>
+                            )}
                         </div>
                     </div>
-                    :
-                    <div className="text-center text-white font-bold text-2xl mt-10">
-                        <h2>Please connect your wallet to view your NFTs</h2>
-                    </div>
-                }
-            </div>
+                </div>
+                :
+                <div className="text-center text-white font-bold text-2xl mt-16 ml-5">
+                    <h2>Please connect your wallet</h2>
+                </div>
+            }
         </div>
     );
 }

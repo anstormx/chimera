@@ -1,5 +1,5 @@
 import {Link} from "react-router-dom";
-import { GetIpfsUrlFromPinata } from "../../utils";
+import { GetIpfsUrlFromPinata } from "../../utils/url";
 
 function NFTTile ({data}) {
     var newTo;

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { uploadFileToIPFS, uploadJSONToIPFS } from "../pinata";
+import { uploadFileToIPFS, uploadJSONToIPFS } from "../utils/pinata";
 import marketplace from '../marketplace.json';
 import { ethers } from "ethers";
 import { toast } from 'react-toastify';
@@ -128,9 +128,8 @@ export default function Listing () {
         }
     }
 
-    console.log("Working", process.env);
     return (
-        <div className="flex flex-col place-items-center mt-10 min-h-screen" id="nftForm">
+        <div className="flex flex-col items-center px-10 py-6 min-h-screen" id="nftForm">
             <form className="bg-transparent text-white">
                 <h3 className="text-center font-bold mb-10 text-3xl">Upload Your NFT</h3>
                 <div className="mb-4">

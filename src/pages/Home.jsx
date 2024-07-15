@@ -23,7 +23,7 @@ export default function Marketplace() {
     }, [dataFetched, debounceGetAllNFTs]);
 
     return (
-        <div className="flex flex-col place-items-center mt-20 min-h-screen">
+        <div className="flex flex-col place-items-center py-6 px-10 min-h-screen">
             <div className="text-3xl font-bold text-white">
                 Listed NFTs
             </div>

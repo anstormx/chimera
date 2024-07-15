@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import marketplace from "../marketplace.json";
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
-import { GetIpfsUrlFromPinata } from "../utils";
+import { GetIpfsUrlFromPinata } from "../utils/url";
 import { ethers } from "ethers";
 import { toast } from "react-toastify";
 
