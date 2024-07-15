@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import marketplace from "../marketplace.json";
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
@@ -127,48 +127,51 @@ export default function NFTPage () {
     }, [data, dataFetched, tokenID, getNFTData]);
 
     return(
-        <div className="flex ml-20 mt-20 min-h-screen mx-40" >
+        <div className="flex ml-20 py-6 min-h-screen mx-40" >
             <img src={data.image} alt="nft" className="w-2/5 rounded-3xl h-[650px] ml-10"/>
             <div className="text-lg ml-20 space-y-12 bg-gray-800 text-white rounded-3xl p-5 w-2/5 h-[650px]" style={{marginLeft:'20%'}}>
                 <div className="mt-2">
-                    Name: {data.name}
+                    <div className='text-base font-semibold text-blue-400'>
+                        <Link to="https://opensea.io/collection/boredapeyachtclub">
+                            {data.description}
+                        </Link>
+                    </div>
+                    <div className=' text-3xl font-semibold mt-6'>
+                     # {data.name}
+                    </div>
+                    <div className='text-base'>
+                        Owned by: {data.seller}
+                    </div>
                 </div>
                 <div>
-                    Description: {data.description}
-                </div>
-                <div>
-                    Price: {data.price + " ETH"}
-                </div>
-                <div>
-                    Owner: {data.owner}
-                </div>
-                <div>
-                    Seller: {data.seller}
+                    <div className="text-sm text-gray-400">
+                    Current price
+                    </div>
+                    <div className='text-3xl mt-2 font-bold'>
+                        {data.price + " ETH"}
+                        <div className="text-sm text-gray-400 inline-flex ml-4">
+                            ${data.price*4000}
+                        </div>
+                    </div>
                 </div>
                 <div>
                     { currAddress !== data.owner && currAddress !== data.seller ?
-                        <button className="enableEthereumButton bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-xl text-xl transition duration-200" onClick={() => buyNFT(tokenID)}>
+                        <button className="enableEthereumButton bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-xl text-xl transition duration-200" onClick={() => buyNFT(tokenID)}>
                             Buy this NFT
                         </button>
-                    :   <div className="text-green-600 text-xl font-semibold">
+                    :   <div className="text-green-500 text-lg font-semibold">
                             You are the owner of this NFT
+                            <br/>
                             { marketplace.address === data.owner ? 
-                                <div className="my-10">
-                                    This NFT is listed for sale by you
-                                    <br></br>
-                                    <button className="mt-6 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-xl text-xl transition duration-200" 
-                                        onClick={() => listNFT(tokenID)}>
-                                        Unlist this NFT
-                                    </button>
-                                </div> : 
-                                <div className="mt-6">
-                                    This NFT is not listed for sale
-                                <br></br>
-                                <button className="mt-6 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-xl text-xl transition duration-200" 
+                                <button className="mt-6 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-xl text-xl transition duration-200" 
+                                    onClick={() => listNFT(tokenID)}>
+                                    Unlist this NFT
+                                </button>
+                            : 
+                                <button className="mt-6 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-xl text-xl transition duration-200" 
                                     onClick={() => listNFT(tokenID)}>
                                     List this NFT
                                 </button>
-                                </div>
                             }
                         </div>
                     }      
