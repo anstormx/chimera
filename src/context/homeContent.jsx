@@ -21,13 +21,7 @@ export const HomeProvider = ({ children }) => {
         if (loading) return;
         setLoading(true);
         try {
-            const cachedData = localStorage.getItem('nftData');
-            if (cachedData) {
-                setData(JSON.parse(cachedData));
-                setDataFetched(true);
-                setLoading(false);
-                return;
-            }
+   
             let provider = new ethers.providers.InfuraProvider(
                 "sepolia",
                 process.env.INFURA_PROJECT_ID
@@ -45,6 +39,19 @@ export const HomeProvider = ({ children }) => {
             }
             const contract = new ethers.Contract(marketplace.address, marketplace.abi, provider);
             const listedNFT = await contract.getMarketTokens();
+
+            const cachedDataString = localStorage.getItem('nftData');
+            const cachedData = cachedDataString ? JSON.parse(cachedDataString) : [];
+
+            console.log(cachedData);
+            console.log(listedNFT.length);
+            if (cachedData.length > listedNFT.length) {
+                setData(JSON.parse(cachedData));
+                setDataFetched(true);
+                setLoading(false);
+                return;
+            }
+
             const items = await Promise.all(listedNFT.map(async nft => {
                 let tokenURI = await contract.tokenURI(nft.tokenID);
                 tokenURI = GetIpfsUrlFromPinata(tokenURI);

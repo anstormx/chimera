@@ -44,11 +44,14 @@ function Navbar() {
           <Link to="/profile">Profile</Link>
         </div>
         <div className='mx-4 font-bold hover:text-[#c8cacd] cursor-pointer transition duration-200'> 
+          <Link to="/collection">Collection</Link>
+        </div>
+        <div className='mx-4 font-bold hover:text-[#c8cacd] cursor-pointer transition duration-200'> 
           <Link to="/listing">Listing</Link>
         </div>
       </div>
 
-      <div className='flex mx-[10%] w-[31%] px-4 items-center rounded-xl bg-gray-800 hover:bg-gray-700 transition duration-200 bg-opacity-90'>
+      <div className='flex mx-[5%] w-[31%] px-4 items-center rounded-xl bg-gray-800 hover:bg-gray-700 transition duration-200 bg-opacity-90'>
         <FontAwesomeIcon icon={faMagnifyingGlass} className="mr-2 text-[#8a939b]"/>        
         <input className='h-12 w-full border-0 bg-transparent px-2 text-[#e6e8eb] placeholder:text-[#8a939b] placeholder:font-semibold outline-0' 
           placeholder="Search"/>

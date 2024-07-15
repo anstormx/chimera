@@ -10,6 +10,7 @@ import 'swiper/css/bundle';
 import Navbar from './pages/components/Navbar';
 import Footer from './pages/components/Footer';
 import { HomeProvider } from './context/homeContent';
+import Collection from './pages/Collection';
 
 
 function App() {
@@ -21,10 +22,11 @@ function App() {
         <Router>
           <Navbar />
           <Routes>
-              <Route path="/" element={<Home />}/>
+            <Route path="/" element={<Home />}/>
             <Route path="/nftpage/:tokenID" element={<NFTPage />}/>        
             <Route path="/profile" element={<Profile />}/>
             <Route path="/listing" element={<Listing />}/>             
+            <Route path="/collection" element={<Collection />}/>             
           </Routes>
           <Footer />
         </Router>
