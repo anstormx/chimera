@@ -152,7 +152,7 @@ export default function NFTPage () {
     return(
         <div className="flex ml-20 mt-20 min-h-screen mx-40" >
             <img src={data.image} alt="nft" className="w-2/5 rounded-3xl h-[650px] ml-10"/>
-            <div className="text-lg ml-20 space-y-12 bg-gray-800 text-white shadow-2xl rounded-3xl p-5 w-2/5 h-[650px]" style={{marginLeft:'20%'}}>
+            <div className="text-lg ml-20 space-y-12 bg-gray-800 text-white rounded-3xl p-5 w-2/5 h-[650px]" style={{marginLeft:'20%'}}>
                 <div className="mt-2">
                     Name: {data.name}
                 </div>

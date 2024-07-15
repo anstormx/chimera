@@ -25,7 +25,7 @@ export default function Home() {
 
     return (
         <div className="min-h-screen">
-            <div className="fixed inset-0 bg-[url('https://lh3.googleusercontent.com/ujepnqpnL0nDQIHsWxlCXzyw4pf01yjz1Jmb4kAQHumJAPrSEj0-e3ABMZlZ1HEpJoqwOcY_kgnuJGzfXbd2Tijri66GXUtfN2MXQA=s250')] bg-cover bg-center opacity-30 blur-sm z-[-1]">
+            <div className="fixed inset-0 bg-[url('https://lh3.googleusercontent.com/ujepnqpnL0nDQIHsWxlCXzyw4pf01yjz1Jmb4kAQHumJAPrSEj0-e3ABMZlZ1HEpJoqwOcY_kgnuJGzfXbd2Tijri66GXUtfN2MXQA=s250')] bg-cover bg-center opacity-50 blur-sm z-[-1]">
             </div>
             <Hero />
             <div className="flex flex-col place-items-center">

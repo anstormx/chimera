@@ -131,22 +131,22 @@ export default function Listing () {
                 <h3 className="text-center font-bold mb-6 text-3xl">List Your NFT</h3>
                 <div className="mb-4">
                     <label className="block text-lg mb-2 font-semibold" htmlFor="name">NFT Name</label>
-                    <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" type="text" onChange={e => updateFormParams({...formParams, name: e.target.value})} value={formParams.name}></input>
+                    <input className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" type="text" onChange={e => updateFormParams({...formParams, name: e.target.value})} value={formParams.name}></input>
                 </div>
                 <div className="mb-4">
                     <label className="block text-lg mb-2 font-semibold" htmlFor="description">NFT Description</label>
-                    <textarea className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" cols="40" rows="4" id="description" type="text" value={formParams.description} onChange={e => updateFormParams({...formParams, description: e.target.value})}></textarea>
+                    <textarea className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" cols="40" rows="4" id="description" type="text" value={formParams.description} onChange={e => updateFormParams({...formParams, description: e.target.value})}></textarea>
                 </div>
                 <div className="mb-4">
                     <label className="block text-lg mb-2 font-semibold" htmlFor="price">Price (in ETH)</label>
-                    <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="number" placeholder="Min 0.025 ETH" step="0.01" value={formParams.price} onChange={e => updateFormParams({...formParams, price: e.target.value})}></input>
+                    <input className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="number" placeholder="Min 0.025 ETH" step="0.01" value={formParams.price} onChange={e => updateFormParams({...formParams, price: e.target.value})}></input>
                 </div>
                 <div>
                     <label className="block text-lg mb-2 font-semibold" htmlFor="image">Upload Image (&lt;500 KB)</label>
                     <input type={"file"} onChange={OnChangeFile}></input>
                 </div>
-                <button onClick={listNFT} className="font-bold mt-10 w-full bg-purple-600 hover:bg-purple-700 rounded-xl p-2 shadow-lg transition duration-200" id="list-button">
-                    List NFT
+                <button onClick={listNFT} className="font-semibold mt-10 text-lg w-full bg-gray-800 hover:bg-gray-700 rounded-xl p-2 shadow-lg transition duration-200" id="list-button">
+                    List
                 </button>
             </form>
         </div>

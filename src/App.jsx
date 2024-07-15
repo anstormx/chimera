@@ -3,7 +3,7 @@ import Profile from './pages/Profile';
 import Listing from './pages/Listing';
 import NFTPage from './pages/NFTpage';
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
-import ThreeScene from './pages/components/Threescene';
+// import ThreeScene from './pages/components/Threescene';
 import { ToastContainer, Flip } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'swiper/css/bundle';
@@ -14,8 +14,8 @@ import { HomeProvider } from './context/homeContent';
 
 function App() {
   return (
-    <div className="relative min-h-screen">
-      <ThreeScene />
+    <div className="relative min-h-screen bg-black bg-opacity-90">
+      {/* <ThreeScene /> */}
       <div className="overflow-x-hidden">
       <HomeProvider>
         <Router>

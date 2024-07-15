@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import * as Three from 'three';
-import space from '../../assets/bg.jpg';
+import space from '../../assets/bg3.png';
 import mercury from '../../assets/mercury.webp';
 import eris from '../../assets/eris_fictional.webp';
 import haumea from '../../assets/haumea_fictional.webp';

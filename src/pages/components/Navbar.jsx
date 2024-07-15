@@ -56,22 +56,22 @@ function Navbar() {
       <div className='flex items-center ml-auto'>
         {connected ?
           <button 
-            className="bg-green-600 hover:bg-green-700 py-2 px-4 rounded-xl h-12 font-semibold transition duration-200" 
+            className="bg-green-600 hover:bg-green-800 w-32 py-2 px-4 rounded-xl h-12 font-semibold transition duration-200" 
             disabled={true}
           > 
             Connected
           </button>
         : 
           <button 
-            className="enableEthereumButton bg-blue-600 hover:bg-blue-700 py-2 px-4 rounded-xl h-12 font-semibold transition duration-200" 
+            className="enableEthereumButton w-32 bg-blue-600 hover:bg-blue-800 py-2 px-4 rounded-xl h-12 font-semibold transition duration-200" 
             onClick={handleConnectWebsite} 
             disabled={loading}
           >
             {loading ? 
               <div>
-                <FontAwesomeIcon icon={faSpinner} spin className="mr-3"/> 
-                Connecting
-              </div>: "Connect"
+                <FontAwesomeIcon icon={faSpinner} spin size="xl"/> 
+              </div>
+              : "Connect"
             }
           </button>
         }
