@@ -48,26 +48,22 @@ function Navbar() {
         </div>
       </div>
 
-      {/* Search bar */}
-      <div className='flex mx-[10%] w-[31%] px-4 items-center rounded-xl bg-[#36384A] hover:bg-[#4c505c] transition duration-200 bg-opacity-90'>
+      <div className='flex mx-[10%] w-[31%] px-4 items-center rounded-xl bg-gray-800 hover:bg-gray-700 transition duration-200 bg-opacity-90'>
         <FontAwesomeIcon icon={faMagnifyingGlass} className="mr-2 text-[#8a939b]"/>        
-        {/* <div className='text-[#8a939b] mx-3 font-bold text-lg'>
-          <AiOutlineSearch />
-        </div> */}
         <input className='h-12 w-full border-0 bg-transparent px-2 text-[#e6e8eb] placeholder:text-[#8a939b] placeholder:font-semibold outline-0' 
           placeholder="Search"/>
       </div>
       <div className='flex items-center ml-auto'>
         {connected ?
           <button 
-            className="bg-green-500 hover:bg-green-700 py-2 px-4 rounded-xl h-12 font-semibold transition duration-200" 
+            className="bg-green-600 hover:bg-green-700 py-2 px-4 rounded-xl h-12 font-semibold transition duration-200" 
             disabled={true}
           > 
             Connected
           </button>
         : 
           <button 
-            className="enableEthereumButton bg-blue-500 hover:bg-blue-700 py-2 px-4 rounded-xl h-12 font-semibold transition duration-200" 
+            className="enableEthereumButton bg-blue-600 hover:bg-blue-700 py-2 px-4 rounded-xl h-12 font-semibold transition duration-200" 
             onClick={handleConnectWebsite} 
             disabled={loading}
           >

@@ -15,11 +15,31 @@ export default function NFTPage () {
 
     const getNFTData = useCallback (async(tokenID) =>{
         try {
-            const providerInfura = new ethers.providers.InfuraProvider(
-                "sepolia",
-                process.env.INFURA_PROJECT_ID
-            );
-            let contract = new ethers.Contract(marketplace.address, marketplace.abi, providerInfura)
+            let provider;
+
+            if (window.ethereum) {
+                const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+                if(chainId !== '0xaa36a7') {
+                    toast.warn("You're viewing data from the Sepolia network, but your wallet is connected to mainnet");
+                }
+                try {
+                    const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+                    if (accounts.length > 0) {
+                        provider = new ethers.providers.Web3Provider(window.ethereum);
+                    } else {
+                        provider = new ethers.providers.InfuraProvider(
+                            "sepolia",
+                            process.env.INFURA_PROJECT_ID
+                        );
+                    }
+                } catch (error) {
+                    provider = new ethers.providers.InfuraProvider(
+                        "sepolia",
+                        process.env.INFURA_PROJECT_ID
+                    );
+                }
+            }
+            let contract = new ethers.Contract(marketplace.address, marketplace.abi, provider)
             var tokenURI = await contract.tokenURI(tokenID);
             const listedToken = await contract.getListedToken(tokenID);
             tokenURI = GetIpfsUrlFromPinata(tokenURI);
@@ -130,9 +150,9 @@ export default function NFTPage () {
     }, [data, dataFetched, tokenID, getNFTData]);
 
     return(
-        <div className="flex ml-20 mt-20 min-h-screen" style={{margin:"20px 130px"}}>
-            <img src={data.image} alt="nft" className="w-2/5 rounded-3xl h-[600px] p-1 border-purple-900 border-4"/>
-            <div className="text-lg ml-20 space-y-12 bg-purple-900 bg-opacity-80 text-white shadow-2xl rounded-3xl p-5 w-2/5 h-[600px]" style={{marginLeft:'20%'}}>
+        <div className="flex ml-20 mt-20 min-h-screen mx-40" >
+            <img src={data.image} alt="nft" className="w-2/5 rounded-3xl h-[650px] ml-10"/>
+            <div className="text-lg ml-20 space-y-12 bg-gray-800 text-white shadow-2xl rounded-3xl p-5 w-2/5 h-[650px]" style={{marginLeft:'20%'}}>
                 <div className="mt-2">
                     Name: {data.name}
                 </div>
@@ -150,23 +170,25 @@ export default function NFTPage () {
                 </div>
                 <div>
                     { currAddress !== data.owner && currAddress !== data.seller ?
-                        <button className="enableEthereumButton bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded-xl text-xl font-bold" onClick={() => buyNFT(tokenID)}>
+                        <button className="enableEthereumButton bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-xl text-xl transition duration-200" onClick={() => buyNFT(tokenID)}>
                             Buy this NFT
                         </button>
-                    :   <div className="text-green-600 text-xl font-bold">
+                    :   <div className="text-green-600 text-xl font-semibold">
                             You are the owner of this NFT
                             { marketplace.address === data.owner ? 
-                                <div className="mt-6">
+                                <div className="my-10">
                                     This NFT is listed for sale by you
                                     <br></br>
-                                    <button className="mt-6 bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded-xl text-xl font-bold" onClick={() => listNFT(tokenID)}>
+                                    <button className="mt-6 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-xl text-xl transition duration-200" 
+                                        onClick={() => listNFT(tokenID)}>
                                         Unlist this NFT
                                     </button>
                                 </div> : 
                                 <div className="mt-6">
                                     This NFT is not listed for sale
                                 <br></br>
-                                <button className="mt-6 bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded-xl text-xl font-bold" onClick={() => listNFT(tokenID)}>
+                                <button className="mt-6 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-xl text-xl transition duration-200" 
+                                    onClick={() => listNFT(tokenID)}>
                                     List this NFT
                                 </button>
                                 </div>

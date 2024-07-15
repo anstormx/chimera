@@ -16,7 +16,7 @@ function App() {
   return (
     <div className="relative min-h-screen">
       <ThreeScene />
-      <div className="overflow-x-hidden overflow-y-hidden">
+      <div className="overflow-x-hidden">
       <HomeProvider>
         <Router>
           <Navbar />

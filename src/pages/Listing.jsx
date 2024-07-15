@@ -8,7 +8,6 @@ import { toast } from 'react-toastify';
 export default function Listing () {
     const [formParams, updateFormParams] = useState({ name: '', description: '', price: ''});
     const [fileURL, setFileURL] = useState(null);
-    const [message, updateMessage] = useState('');
 
     async function disableButton() {
         const listButton = document.getElementById("list-button");
@@ -28,16 +27,16 @@ export default function Listing () {
         var file = event.target.files[0];
         try {
             disableButton();
-            updateMessage("Uploading image to IPFS...")
+            toast.info("Uploading image to IPFS...")
             const response = await uploadFileToIPFS(file);
             if(response.status === true) {
                 enableButton();
-                updateMessage("Image uploaded successfully!")
+                toast.success("Image uploaded successfully!")
                 setFileURL(response.pinataURL);
             }
         }
         catch(error) {
-            updateMessage("Error uploading image to IPFS, check console for more details.")
+            toast.error("Error uploading image to IPFS, check console for more details.")
             console.log("Error during file upload", error);
         }
     }
@@ -46,7 +45,7 @@ export default function Listing () {
         const {name, description, price} = formParams;
         if( !name || !description || !price || !fileURL)
         {
-            updateMessage("Please fill all the fields!")
+            toast.error("Please fill all the fields!")
             return -1;
         }
 
@@ -64,19 +63,19 @@ export default function Listing () {
             }
         }
         catch(error) {
-            updateMessage("Error uploading JSON metadata, check console for more details.")
+            toast.error("Error uploading JSON metadata, check console for more details.")
             console.log("Error uploading JSON metadata:", error)
         }
     }
 
     async function listNFT(event) {
         event.preventDefault();
-
         try {
             const metadataURL = await uploadMetadataToIPFS();
             if(metadataURL === -1)
                 return;
             if(typeof window.ethereum === 'undefined') {
+                toast.error('Please install MetaMask to interact with this marketplace!');
                 return;
             }
             
@@ -106,7 +105,7 @@ export default function Listing () {
             await window.ethereum.request({ method: 'eth_requestAccounts' });           
             const signer = provider.getSigner();
             disableButton();
-            updateMessage("Uploading NFT, please wait!");
+            toast.info("Uploading NFT, please wait!");
 
             let contract = new ethers.Contract(marketplace.address, marketplace.abi, signer);
             const price = ethers.utils.parseUnits(formParams.price, 'ether');
@@ -115,7 +114,6 @@ export default function Listing () {
             let transaction = await contract.createToken(metadataURL, price, { value: listingPrice });
             await transaction.wait();
 
-            updateMessage("");
             toast.success('NFT listed successfully!');
             enableButton();
             updateFormParams({ name: '', description: '', price: ''});
@@ -123,7 +121,6 @@ export default function Listing () {
         catch(error) {
             enableButton();
             toast.error('Error listing NFT, check console for more details.');
-            updateMessage("");
             console.log( "Upload error", error);
         }
     }
@@ -131,16 +128,16 @@ export default function Listing () {
     return (
         <div className="flex flex-col items-center px-10 py-6 min-h-screen" id="nftForm">
             <form className="bg-transparent text-white">
-                <h3 className="text-center font-bold mb-10 text-3xl">Upload Your NFT</h3>
+                <h3 className="text-center font-bold mb-6 text-3xl">List Your NFT</h3>
                 <div className="mb-4">
                     <label className="block text-lg mb-2 font-semibold" htmlFor="name">NFT Name</label>
                     <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" type="text" onChange={e => updateFormParams({...formParams, name: e.target.value})} value={formParams.name}></input>
                 </div>
-                <div className="mb-6">
+                <div className="mb-4">
                     <label className="block text-lg mb-2 font-semibold" htmlFor="description">NFT Description</label>
-                    <textarea className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" cols="40" rows="5" id="description" type="text" value={formParams.description} onChange={e => updateFormParams({...formParams, description: e.target.value})}></textarea>
+                    <textarea className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" cols="40" rows="4" id="description" type="text" value={formParams.description} onChange={e => updateFormParams({...formParams, description: e.target.value})}></textarea>
                 </div>
-                <div className="mb-6">
+                <div className="mb-4">
                     <label className="block text-lg mb-2 font-semibold" htmlFor="price">Price (in ETH)</label>
                     <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="number" placeholder="Min 0.025 ETH" step="0.01" value={formParams.price} onChange={e => updateFormParams({...formParams, price: e.target.value})}></input>
                 </div>
@@ -148,8 +145,7 @@ export default function Listing () {
                     <label className="block text-lg mb-2 font-semibold" htmlFor="image">Upload Image (&lt;500 KB)</label>
                     <input type={"file"} onChange={OnChangeFile}></input>
                 </div>
-                <div className="text-red-500 text-center">{message}</div>
-                <button onClick={listNFT} className="font-bold mt-10 w-full bg-purple-700 text-white rounded p-2 shadow-lg" id="list-button">
+                <button onClick={listNFT} className="font-bold mt-10 w-full bg-purple-600 hover:bg-purple-700 rounded-xl p-2 shadow-lg transition duration-200" id="list-button">
                     List NFT
                 </button>
             </form>

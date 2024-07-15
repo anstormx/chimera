@@ -77,8 +77,8 @@ const ThreeScene = () => {
       lastTime = time;
 
       planets.forEach((planet, index) => {
-        planet.rotation.y += (0.001 + index * 0.0005) * delta * 60;
-        planet.rotation.x += (0.001 + index * 0.0005) * delta * 60;
+        planet.rotation.y += (0.001 + index * 0.002) * delta * 60;
+        planet.rotation.x += (0.001 + index * 0.002) * delta * 60;
       });
 
       renderer.render(scene, camera);

@@ -31,6 +31,10 @@ export const HomeProvider = ({ children }) => {
             let provider;
 
             if (window.ethereum) {
+                const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+                if(chainId !== '0xaa36a7') {
+                    toast.warn("You're viewing data from the Sepolia network, but your wallet is connected to mainnet");
+                }
                 try {
                     const accounts = await window.ethereum.request({ method: 'eth_accounts' });
                     if (accounts.length > 0) {
