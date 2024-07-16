@@ -31,7 +31,6 @@
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@openzeppelin/contracts": "^4.7.3",
     "@prisma/client": "^5.16.2",
-    "@react-three/fiber": "^8.16.8",
     "axios": "^0.27.2",
     "fs": "*",
     "lodash": "^4.17.21",
@@ -44,8 +43,6 @@
     "react-scripts": "5.0.1",
     "react-toastify": "^10.0.5",
     "swiper": "^11.1.4",
-    "three": "^0.165.0",
-    "typescript": "^5.5.3",
     "vm-browserify": "^1.1.2",
     "web3modal": "^1.9.7"
   },
