@@ -15,9 +15,9 @@ export default function Profile () {
     const [connected, setConnection] = useState(false);
 
     const getNFTData = useCallback(async () => {
-        setLoading(true);
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
         try {
+            setLoading(true);
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
             await window.ethereum.request({ method: 'eth_requestAccounts' });
             const signer = provider.getSigner();
             let contract = new ethers.Contract(marketplace.address, marketplace.abi, signer)
@@ -75,7 +75,7 @@ export default function Profile () {
     }, [getNFTData]);
 
     return (
-        <div className="min-h-screen flex flex-col flex-grow px-32 py-6">
+        <div className="min-h-screen flex flex-col flex-grow px-[8%] py-[2%]">
             {connected ? 
                 <div>
                     <div className="text-center text-white">

@@ -1,9 +1,10 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { ethers } from "ethers";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { GetIpfsUrlFromPinata } from "../utils/url";
 import marketplace from "../marketplace.json";
+import getProvider from "../utils/getProvider";
 // import { prisma } from "../utils/db";
 
 const homeContext = createContext(undefined);
@@ -16,35 +17,21 @@ export const HomeProvider = ({ children }) => {
     const [data, setData] = useState([]);
     const [dataFetched, setDataFetched] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [currAddress, updateCurrAddress] = useState("0x");
 
     const getAllNFTs = async () => {
-        if (loading) return;
-        setLoading(true);
         try {
-   
-            let provider = new ethers.providers.InfuraProvider(
-                "sepolia",
-                process.env.INFURA_PROJECT_ID
-            );
+            if (loading) return;
+            setLoading(true);
+            const {provider, address} = await getProvider();
+            updateCurrAddress(address);
 
-            if (window.ethereum) {
-                const chainId = await window.ethereum.request({ method: 'eth_chainId' });
-                if(chainId !== '0xaa36a7') {
-                    toast.warn("You're viewing data from the Sepolia network, but your wallet is connected to mainnet");
-                }
-                const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-                if (accounts.length > 0) {
-                    provider = new ethers.providers.Web3Provider(window.ethereum);
-                }
-            }
             const contract = new ethers.Contract(marketplace.address, marketplace.abi, provider);
             const listedNFT = await contract.getMarketTokens();
 
             const cachedDataString = localStorage.getItem('nftData');
             const cachedData = cachedDataString ? JSON.parse(cachedDataString) : [];
 
-            console.log(cachedData);
-            console.log(listedNFT.length);
             if (cachedData.length > listedNFT.length) {
                 setData(JSON.parse(cachedData));
                 setDataFetched(true);
@@ -92,6 +79,12 @@ export const HomeProvider = ({ children }) => {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        if (currAddress !== "0x") {
+            toast.info(`Connected with: ${currAddress}`);
+        }
+    }, [currAddress]);
 
     return (
         <homeContext.Provider value={{ data, dataFetched, loading, getAllNFTs }}>

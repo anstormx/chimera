@@ -3,7 +3,7 @@ import {useEffect} from "react";
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { useHomeContext } from "../context/homeContent";
+import { useHomeContext } from "../context/homeContext";
 import { debounce } from "lodash";
 
 
@@ -21,7 +21,7 @@ export default function Home() {
     }, [dataFetched, debounceGetAllNFTs]);
 
     return (
-        <div className="min-h-screen py-6 px-32">
+        <div className="min-h-screen py-[2%] px-[8%]">
             <h2 className="font-bold text-3xl mb-4 text-center">Collection</h2>
             <div className="flex flex-col place-items-center">
             {loading ? (

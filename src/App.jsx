@@ -9,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'swiper/css/bundle';
 import Navbar from './pages/components/Navbar';
 import Footer from './pages/components/Footer';
-import { HomeProvider } from './context/homeContent';
+import { HomeProvider } from './context/homeContext';
 import Collection from './pages/Collection';
 
 

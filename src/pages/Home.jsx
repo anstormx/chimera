@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Scrollbar, A11y, Autoplay } from 'swiper/modules';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { useHomeContext } from "../context/homeContent";
+import { useHomeContext } from "../context/homeContext";
 import { debounce } from "lodash";
 import Hero from "./components/Hero";
 
@@ -25,7 +25,7 @@ export default function Home() {
 
     return (
         <div className="min-h-screen">
-            <div className="fixed inset-0 bg-[url('https://lh3.googleusercontent.com/ujepnqpnL0nDQIHsWxlCXzyw4pf01yjz1Jmb4kAQHumJAPrSEj0-e3ABMZlZ1HEpJoqwOcY_kgnuJGzfXbd2Tijri66GXUtfN2MXQA=s250')] bg-cover bg-center opacity-50 blur-sm z-[-1]">
+            <div className="fixed inset-0 bg-cover bg-center blur-sm z-[-1] bg-[url('https://lh3.googleusercontent.com/ujepnqpnL0nDQIHsWxlCXzyw4pf01yjz1Jmb4kAQHumJAPrSEj0-e3ABMZlZ1HEpJoqwOcY_kgnuJGzfXbd2Tijri66GXUtfN2MXQA=s250')]">
             </div>
             <Hero />
             <div className="flex flex-col place-items-center">
