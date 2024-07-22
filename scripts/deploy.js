@@ -10,8 +10,8 @@ async function main() {
     console.log("Contract deployed to:", contract.address);
 
     const data = {
-        address: contract.address,
-        abi: JSON.parse(contract.interface.format('json'))
+      address: contract.address,
+      abi: JSON.parse(contract.interface.format('json'))
     }
 
     //This writes the ABI and address to json file
